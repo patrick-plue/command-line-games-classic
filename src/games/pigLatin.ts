@@ -2,22 +2,19 @@ import { version } from 'os';
 import { type State } from 'src/state.js';
 export function playPigLatin(state: State) {
     const { rl } = state;
-    rl.setPrompt('Enter your sentence \n');
-    rl.prompt();
-    rl.on('line', (input: string) => {
-        const userInput = input;
-        if (!userInput) {
-            rl.prompt();
-        }
-        if (userInput === 'n') {
-            process.exit();
-        }
-        const encodedSentence = translateSentence(userInput);
-        console.log(encodedSentence);
-        // process.exit();
-
-        rl.setPrompt('do you want to play again? \n›');
-        rl.prompt();
+    rl.question('Enter your sentence \n', (answer) => {
+        const translatedSentence = translateSentence(answer);
+        console.log(translatedSentence);
+        rl.question(
+            'Do you want to play again? \nn - no\ny - yes\n',
+            (answer) => {
+                if (answer == 'n') {
+                    process.exit();
+                } else {
+                    playPigLatin(state);
+                }
+            }
+        );
     });
 }
 
