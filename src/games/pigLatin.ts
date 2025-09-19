@@ -1,3 +1,4 @@
+import { version } from 'os';
 import { type State } from 'src/state.js';
 export function playPigLatin(state: State) {
     const { rl } = state;
@@ -8,9 +9,15 @@ export function playPigLatin(state: State) {
         if (!userInput) {
             rl.prompt();
         }
+        if (userInput === 'n') {
+            process.exit();
+        }
         const encodedSentence = translateSentence(userInput);
         console.log(encodedSentence);
-        process.exit();
+        // process.exit();
+
+        rl.setPrompt('do you want to play again? \n›');
+        rl.prompt();
     });
 }
 
@@ -18,7 +25,11 @@ const vowels = ['a', 'e', 'i', 'o', 'u'];
 
 function mutateWord(word: string) {
     const firstChar = word[0].toLowerCase();
-    const secondChar = word[1].toLowerCase();
+    const secondChar = word[1];
+
+    if (!secondChar) {
+        return firstChar + 'way';
+    }
 
     if (vowels.includes(firstChar)) {
         return word + 'way';
