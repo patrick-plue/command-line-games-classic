@@ -1,5 +1,6 @@
-import { type State } from 'src/state.js';
-import { compileFunction } from 'vm';
+import { playAgain } from '../menu.js';
+import { sleep } from './utils.js';
+import { type State } from '../state.js';
 
 type Options = Record<string, string>;
 
@@ -12,7 +13,7 @@ const options: Options = {
 export function playRockPaperScissors(state: State) {
     let userInput: string;
     const { rl } = state;
-    rl.question('Choose rock, paper, or scissors:\n', (answer) => {
+    rl.question('Choose rock, paper, or scissors:\n', async (answer) => {
         try {
             userInput = validateInput(answer);
         } catch (error) {
@@ -25,18 +26,10 @@ export function playRockPaperScissors(state: State) {
         const computerChoice = generateComputerChoice(options);
         const winner = determineWinner(userInput, computerChoice);
         console.log('And ....');
+        await sleep(2000);
         console.log(`${winner}`);
 
-        rl.question(
-            'Do you want to play again? \nn - no\ny - yes\n',
-            (answer) => {
-                if (answer == 'n') {
-                    process.exit();
-                } else {
-                    playRockPaperScissors(state);
-                }
-            }
-        );
+        playAgain(state, playRockPaperScissors);
     });
 }
 

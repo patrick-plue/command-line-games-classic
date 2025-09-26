@@ -1,20 +1,12 @@
-import { version } from 'os';
+import { playAgain } from '../menu.js';
 import { type State } from 'src/state.js';
 export function playPigLatin(state: State) {
     const { rl } = state;
     rl.question('Enter your sentence \n', (answer) => {
         const translatedSentence = translateSentence(answer);
+        console.log('');
         console.log(translatedSentence);
-        rl.question(
-            'Do you want to play again? \nn - no\ny - yes\n',
-            (answer) => {
-                if (answer == 'n') {
-                    process.exit();
-                } else {
-                    playPigLatin(state);
-                }
-            }
-        );
+        playAgain(state, playPigLatin);
     });
 }
 

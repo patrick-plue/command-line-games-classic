@@ -4,8 +4,14 @@ import {
     playPigLatin,
     playRockPaperScissors,
 } from './games/index.js';
+import { showMenu, exitGame } from './menu.js';
 
 export type CLIGame = {
+    name: string;
+    callback: (state: State) => void;
+};
+
+export type Command = {
     name: string;
     callback: (state: State) => void;
 };
@@ -13,6 +19,7 @@ export type CLIGame = {
 export type State = {
     games: Record<string, CLIGame>;
     rl: Interface;
+    commands: Record<string, Command>;
 };
 
 export function initState(): State {
@@ -42,5 +49,18 @@ export function initState(): State {
         };
     }
 
-    return { games: getGames(), rl };
+    function getCommands() {
+        return {
+            exit: {
+                name: 'exit',
+                callback: exitGame,
+            },
+            menu: {
+                name: 'menu',
+                callback: showMenu,
+            },
+        };
+    }
+
+    return { games: getGames(), commands: getCommands(), rl };
 }
